@@ -1,0 +1,197 @@
+{
+ "_comment": "Imported from CLI AMP: Omarchy Radio.toml",
+ "stations": [
+  {
+   "title": "AR Rahman Hits — Kollywood",
+   "url": "http://stream.zeno.fm/p7b0e3ms97zuv",
+   "genre": "Kollywood, Tamil",
+   "color": "#E8455A"
+  },
+  {
+   "title": "Harris Jayaraj FM — Kollywood",
+   "url": "http://stream.zeno.fm/ob6tjg8gulptv",
+   "genre": "Kollywood, Tamil",
+   "color": "#E8455A"
+  },
+  {
+   "title": "Boom Tamil — Kollywood",
+   "url": "https://streaming.boomtamil.com/Toronto",
+   "genre": "Kollywood, Tamil",
+   "color": "#E8455A"
+  },
+  {
+   "title": "Jei FM — Kollywood",
+   "url": "https://usa3.fastcast4u.com/proxy/jeifm?mp=/1",
+   "genre": "Kollywood, Tamil",
+   "color": "#E8455A"
+  },
+  {
+   "title": "Tamil Panpalai Gold — Kollywood classics",
+   "url": "https://tamilpanpalai.radioca.st/ind",
+   "genre": "Kollywood, Tamil, Classics",
+   "color": "#E8455A"
+  },
+  {
+   "title": "M S Viswanathan FM — Kollywood classics",
+   "url": "http://stream.zeno.fm/x7wc1xgllvsvv",
+   "genre": "Kollywood, Tamil, Classics",
+   "color": "#E8455A"
+  },
+  {
+   "title": "Melody Radio Telugu — Tollywood",
+   "url": "https://a1.asurahosting.com:9580/radio.mp3",
+   "genre": "Tollywood, Telugu",
+   "color": "#F2B33D"
+  },
+  {
+   "title": "London Telugu Radio — Tollywood",
+   "url": "https://c8.radioboss.fm/stream/33",
+   "genre": "Tollywood, Telugu",
+   "color": "#F2B33D"
+  },
+  {
+   "title": "TORi Live — Tollywood",
+   "url": "http://173.203.133.187:9700/;stream/1",
+   "genre": "Tollywood, Telugu",
+   "color": "#F2B33D"
+  },
+  {
+   "title": "ap 9 FM — Tollywood",
+   "url": "https://stream.ap9fm.in/radio/8000/radio.mp3",
+   "genre": "Tollywood, Telugu",
+   "color": "#F2B33D"
+  },
+  {
+   "title": "Air Telugu — Tollywood",
+   "url": "https://stream.zeno.fm/7kbt507d3qzuv",
+   "genre": "Tollywood, Telugu",
+   "color": "#F2B33D"
+  },
+  {
+   "title": "Bollywood Now — Bollywood",
+   "url": "https://drive.uber.radio/uber/bollywoodnow/icecast.audio",
+   "genre": "Bollywood, Hindi",
+   "color": "#FF7A2F"
+  },
+  {
+   "title": "Bollywood 2010s — Bollywood",
+   "url": "https://drive.uber.radio/uber/bollywood2010s/icecast.audio",
+   "genre": "Bollywood, Hindi",
+   "color": "#FF7A2F"
+  },
+  {
+   "title": "Hits of Bollywood — Bollywood",
+   "url": "http://stream.zeno.fm/8ty8szwpwfeuv",
+   "genre": "Bollywood, Hindi",
+   "color": "#FF7A2F"
+  },
+  {
+   "title": "Nostalgic 90s — Bollywood",
+   "url": "https://www.desizoneradio.com/relay3",
+   "genre": "Bollywood, Hindi, 90s",
+   "color": "#FF7A2F"
+  },
+  {
+   "title": "radioBollyFM — Bollywood",
+   "url": "https://antares.dribbcast.com/proxy/radiobolly/stream.mp3",
+   "genre": "Bollywood, Hindi",
+   "color": "#FF7A2F"
+  },
+  {
+   "title": "Lofi",
+   "url": "https://radio.cliamp.stream/lofi/stream",
+   "genre": "radio",
+   "color": "#E8915A"
+  },
+  {
+   "title": "Kalizo — Lo-Fi",
+   "url": "https://streams.dez.ovh/listen/chillofi/radio.mp3",
+   "genre": "Lofi, Jazz, Chill",
+   "color": "#E8915A"
+  },
+  {
+   "title": "Lofi — Laut.fm",
+   "url": "https://lofi.stream.laut.fm/lofi",
+   "genre": "Chill, Sleepy, Lofi, Study, Chillout",
+   "color": "#E8915A"
+  },
+  {
+   "title": "Chilled Beats — Lo-Fi",
+   "url": "https://chilled-beats.stream.laut.fm/chilled-beats",
+   "genre": "Chill, Chillout, Lo-Fi, Electronic",
+   "color": "#E8915A"
+  },
+  {
+   "title": "Meditative",
+   "url": "https://radio.cliamp.stream/meditative/stream",
+   "genre": "radio",
+   "color": "#8FB8A8"
+  },
+  {
+   "title": "Groove Salad",
+   "url": "https://ice2.somafm.com/groovesalad-256-mp3",
+   "genre": "ambient · electronic",
+   "color": "#5F7FB8"
+  },
+  {
+   "title": "Groove Salad Classic",
+   "url": "https://ice2.somafm.com/gsclassic-128-mp3",
+   "genre": "ambient · electronic",
+   "color": "#5F7FB8"
+  },
+  {
+   "title": "Drone Zone",
+   "url": "https://ice2.somafm.com/dronezone-256-mp3",
+   "genre": "ambient",
+   "color": "#8FB8A8"
+  },
+  {
+   "title": "Deep Space One",
+   "url": "https://ice2.somafm.com/deepspaceone-128-mp3",
+   "genre": "ambient",
+   "color": "#5F7FB8"
+  },
+  {
+   "title": "Space Station Soma",
+   "url": "https://ice2.somafm.com/spacestation-320-mp3",
+   "genre": "electronic",
+   "color": "#5F7FB8"
+  },
+  {
+   "title": "Synphaera Radio",
+   "url": "https://ice2.somafm.com/synphaera-256-mp3",
+   "genre": "ambient · electronic",
+   "color": "#5F7FB8"
+  },
+  {
+   "title": "Omarchy",
+   "url": "https://radio.cliamp.stream/omarchy/stream",
+   "genre": "radio",
+   "color": "#8A6CE0"
+  },
+  {
+   "title": "Synthwave",
+   "url": "https://radio.cliamp.stream/synthwave/stream",
+   "genre": "radio",
+   "color": "#FF4FA3"
+  },
+  {
+   "title": "EDM",
+   "url": "https://radio.cliamp.stream/edm/stream",
+   "genre": "radio",
+   "color": "#39D0FF"
+  },
+  {
+   "title": "Chiptunes",
+   "url": "https://radio.cliamp.stream/chiptune/stream",
+   "genre": "radio",
+   "color": "#9BE15D"
+  },
+  {
+   "title": "Amiga",
+   "url": "https://radio.cliamp.stream/amiga/stream",
+   "genre": "radio",
+   "color": "#9BE15D"
+  }
+ ]
+}

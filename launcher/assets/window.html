@@ -1,0 +1,33 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#p{position:fixed;inset:0;width:100%;height:100%}</style>
+</head><body><div id="p"></div>
+<script>
+// Standard YouTube IFrame Player, full window, no YouTube controls (the launcher draws its own).
+var start = location.hash.slice(1).split('@'), vid = start[0], at = +(start[1] || 0), wantMuted = start[2] !== '0', player;
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('p', {
+    videoId: vid, width: '100%', height: '100%',
+    playerVars: {autoplay: 1, mute: 1, controls: 0, playsinline: 1, rel: 0, iv_load_policy: 3, disablekb: 1, fs: 0, start: at},
+    events: {
+      onReady: function () { player.playVideo(); report(-2); },
+      onStateChange: function (e) {
+        report(e.data);
+        if (e.data === 1) applyMute();
+        if (e.data === 0) { player.seekTo(0); player.playVideo(); } // a finished recording replays from the start
+      },
+      onError: function (e) { Native.error(e.data); }
+    }
+  });
+  setInterval(function () { if (player && player.getCurrentTime) Native.position(vid, Math.floor(player.getCurrentTime())); }, 15000);
+}
+function report(s) {
+  var d = player && player.getVideoData ? player.getVideoData() : {};
+  Native.state(s, d && d.isLive === true ? 1 : d && d.isLive === false ? 0 : -1);
+}
+function setMuted(m) { wantMuted = m; applyMute(); }
+function applyMute() { if (!player || !player.mute) return; if (wantMuted) player.mute(); else { player.unMute(); player.setVolume(100); } }
+function load(id, t) { vid = id; if (player && player.loadVideoById) player.loadVideoById({videoId: id, startSeconds: t || 0}); }
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
+</body></html>

@@ -1,0 +1,27 @@
+1
+00:00:00,450 --> 00:00:05,200
+Meet Horizon. My new TV launcher, made in hours using Claude Code.
+
+2
+00:00:05,250 --> 00:00:11,890
+It runs on my TCL Google TV. No root, and it switches back to Google TV in one tap.
+
+3
+00:00:11,950 --> 00:00:18,166
+The sky follows the real sun and moon over my city, and festival days show up right on the screen.
+
+4
+00:00:18,216 --> 00:00:20,491
+Live weather plays out in the clouds.
+
+5
+00:00:22,116 --> 00:00:25,524
+Tamil, Telugu and Hindi radio, built in.
+
+6
+00:00:26,149 --> 00:00:29,064
+Every app, one press away. No ads.
+
+7
+00:00:29,183 --> 00:00:31,641
+Horizon. Built with Claude Code.

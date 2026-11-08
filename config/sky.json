@@ -1,0 +1,6 @@
+{
+  "_comment": "Fallback only. Horizon finds the TV's current location itself (Android location if available, else the city of its internet address via ipapi.co, refreshed daily). Used only until the first lookup succeeds.",
+  "city": "Chennai",
+  "lat": 13.08,
+  "lon": 80.27
+}

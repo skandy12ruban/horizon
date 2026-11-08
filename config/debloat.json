@@ -1,0 +1,37 @@
+{
+  "_comment": "What debloat.sh may switch off (per user, reversible). 'launchers' are disabled only by install.sh, after Steroid Home is the default. Vendor groups apply when the package exists. Unused user-facing apps come from the app picker, not from here.",
+  "launchers": [
+    "com.google.android.tvlauncher",
+    "com.google.android.tvrecommendations",
+    "com.google.android.apps.tv.launcherx",
+    "com.google.android.leanbacklauncher",
+    "com.mitv.tvhome.atv"
+  ],
+  "ads_tracking": {
+    "google": [
+      "com.google.android.feedback",
+      "com.google.android.partnersetup",
+      "com.google.android.onetimeinitializer"
+    ],
+    "xiaomi": [
+      "com.miui.tv.analytics",
+      "com.xiaomi.statistic",
+      "com.mitv.tvhome.mitvplus",
+      "com.mitv.tvhome.michannel",
+      "com.xm.webcontent",
+      "com.mitv.overseaservice",
+      "com.mitv.toolhouse",
+      "com.xiaomi.mimusic2",
+      "com.mitv.videoplayer",
+      "com.mitv.gallery",
+      "com.xiaomi.mitv.mediaexplorer",
+      "fusion.android.tv.demo",
+      "com.duokan.factorytest"
+    ],
+    "aosp_extras": [
+      "com.android.printspooler",
+      "com.android.htmlviewer",
+      "com.android.wallpaperbackup"
+    ]
+  }
+}

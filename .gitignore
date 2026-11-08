@@ -1,0 +1,20 @@
+# build output
+launcher/out/
+launcher/assets/config/
+launcher/assets/windows/
+
+# per-machine / per-TV state
+.tv-serial
+backup/
+
+# working files
+shots/
+.playwright-mcp/
+video/raw/
+video/frames/
+video/seg/
+video/vo/*.aiff
+video/music_raw.wav
+video/*.png
+.DS_Store
+video/*.mp4

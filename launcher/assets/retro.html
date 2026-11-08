@@ -1,0 +1,64 @@
+<!doctype html>
+<html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<style>html,body{margin:0;height:100%;background:#000;overflow:hidden}#p{position:fixed;inset:0;width:100%;height:100%}</style>
+</head><body><div id="p"></div>
+<script>
+// A "channel" is a set of playlists. Tuning in lands somewhere random in one of them, like a broadcast
+// already in progress; after each programme a multi-playlist channel switches to another playlist.
+var player, lists = [], current = -1, jump = false, seek = false, settling = false, errors = 0;
+function onYouTubeIframeAPIReady() {
+  player = new YT.Player('p', {
+    width: '100%', height: '100%',
+    playerVars: {autoplay: 1, controls: 0, playsinline: 1, rel: 0, iv_load_policy: 3, disablekb: 1, fs: 0, cc_load_policy: 0},
+    events: {
+      onReady: function () { Native.ready(); if (pending) { playId(pending); pending = null; } },
+      onStateChange: function (e) {
+        if (e.data === 1) {
+          errors = 0;
+          if (jump) { // first play after tuning: jump to a random programme in the playlist
+            jump = false;
+            var n = (player.getPlaylist() || []).length;
+            if (n > 1) { seek = true; player.playVideoAt(Math.floor(Math.random() * n)); return; }
+            seek = true;
+          }
+          if (seek) { // ...and join it partway through
+            seek = false;
+            var d = player.getDuration();
+            if (d > 120) { settling = true; player.seekTo(d * (0.05 + Math.random() * 0.5), true); return; }
+          }
+          settling = false; // announce only once the picture is really running
+          try { player.unloadModule('captions'); player.unloadModule('cc'); } catch (x) {}
+          var v = player.getVideoData() || {};
+          Native.now(v.title || '', v.author || '');
+        }
+        if (e.data === 0) { if (lists.length > 1) next(); else if (!lists.length) Native.skip(); } // programme over
+        Native.state(e.data);
+      },
+      onError: function () { // removed or not embeddable: skip on
+        if (!lists.length) { Native.skip(); return; } // a single programme from the decade sites: next channel
+        if (++errors > 4) { errors = 0; next(); } else player.nextVideo();
+      }
+    }
+  });
+}
+// The decade sites pick the programme and where it is "on air"; play just that.
+var pending = null;
+function playId(id) { // join partway through, like tuning into a broadcast already on air
+  if (!player || !player.loadVideoById) { pending = id; return; }
+  lists = []; jump = false; seek = true; player.loadVideoById({videoId: id});
+}
+function pause(p) { if (!player || !player.pauseVideo) return; if (p) player.pauseVideo(); else player.playVideo(); }
+function stop() { if (player && player.stopVideo) player.stopVideo(); }
+function tune(ids) { lists = ids; current = -1; next(true); }
+function next(random) {
+  var i = Math.floor(Math.random() * lists.length);
+  if (lists.length > 1 && i === current) i = (i + 1) % lists.length;
+  current = i;
+  jump = random === true || lists.length > 1;
+  player.loadPlaylist({list: lists[i], listType: 'playlist', index: 0});
+  player.setLoop(true);
+}
+function setMuted(m) { if (m) player.mute(); else { player.unMute(); player.setVolume(100); } }
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
+</body></html>

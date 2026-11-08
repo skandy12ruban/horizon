@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="tv.steroid.home" android:versionCode="2" android:versionName="2.0">
+    <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="30" />
+    <uses-feature android:name="android.software.leanback" android:required="false" />
+    <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
+    <uses-feature android:name="android.hardware.microphone" android:required="false" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Sky: the TV's rough location for the real sun and moon (falls back to its internet address). -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-feature android:name="android.hardware.location" android:required="false" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <!-- Granted over adb: lets the home row order apps by screen time. -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
+    <!-- Granted over adb; only used to restart Horizon's own Home-button service (see Watchdog). -->
+    <uses-permission android:name="android.permission.WRITE_SECURE_SETTINGS" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!-- Visualizer reads the radio's own output; Android gates that behind these. -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <queries>
+        <intent><action android:name="android.intent.action.MAIN" /></intent>
+    </queries>
+    <application android:label="Horizon" android:allowBackup="false" android:usesCleartextTraffic="true"
+        android:hardwareAccelerated="true"
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar.Fullscreen">
+        <activity android:name=".Home" android:exported="true"
+            android:launchMode="singleTask" android:stateNotNeeded="true"
+            android:clearTaskOnLaunch="true" android:screenOrientation="landscape">
+            <intent-filter android:priority="2">
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.HOME" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.LEANBACK_LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".AllApps" android:exported="false" android:screenOrientation="landscape" />
+        <activity android:name=".Retro" android:exported="false"
+            android:screenOrientation="landscape" android:configChanges="keyboard|keyboardHidden|navigation" />
+        <activity android:name=".Windows" android:exported="false"
+            android:launchMode="singleTask" android:screenOrientation="landscape" />
+        <activity android:name=".Radio" android:exported="false"
+            android:launchMode="singleTask" android:screenOrientation="landscape" />
+        <service android:name=".RadioService" android:exported="false" />
+        <receiver android:name=".Watchdog" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+        <service android:name=".HomeKey" android:exported="true" android:label="@string/home_key_label"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter><action android:name="android.accessibilityservice.AccessibilityService" /></intent-filter>
+            <meta-data android:name="android.accessibilityservice" android:resource="@xml/home_key" />
+        </service>
+        <service android:name=".OfficeService" android:exported="false" />
+        <activity android:name=".OfficePanel" android:exported="false"
+            android:launchMode="singleTask" android:screenOrientation="landscape" />
+    </application>
+</manifest>

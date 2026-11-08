@@ -1,0 +1,83 @@
+{
+ "_comment": "Festivals and holidays shown on the home screen (today, tomorrow, or within 3 days). Lunar dates are from Tamil Nadu holiday lists; 'expected' marks dates that depend on moon sighting. Add or edit freely, YYYY-MM-DD.",
+ "festivals": [
+  {
+   "date": "2026-11-08",
+   "name": "Deepavali"
+  },
+  {
+   "date": "2026-11-24",
+   "name": "Karthigai Deepam"
+  },
+  {
+   "date": "2026-12-25",
+   "name": "Christmas"
+  },
+  {
+   "date": "2027-01-01",
+   "name": "New Year's Day"
+  },
+  {
+   "date": "2027-01-14",
+   "name": "Bhogi"
+  },
+  {
+   "date": "2027-01-15",
+   "name": "Pongal"
+  },
+  {
+   "date": "2027-01-16",
+   "name": "Mattu Pongal"
+  },
+  {
+   "date": "2027-01-17",
+   "name": "Kaanum Pongal"
+  },
+  {
+   "date": "2027-01-22",
+   "name": "Thaipoosam"
+  },
+  {
+   "date": "2027-01-26",
+   "name": "Republic Day"
+  },
+  {
+   "date": "2027-03-10",
+   "name": "Ramzan",
+   "expected": true
+  },
+  {
+   "date": "2027-04-14",
+   "name": "Tamil New Year"
+  },
+  {
+   "date": "2027-05-17",
+   "name": "Bakrid",
+   "expected": true
+  },
+  {
+   "date": "2027-08-15",
+   "name": "Independence Day"
+  },
+  {
+   "date": "2027-09-04",
+   "name": "Vinayagar Chathurthi"
+  },
+  {
+   "date": "2027-10-02",
+   "name": "Gandhi Jayanti"
+  },
+  {
+   "date": "2027-10-08",
+   "name": "Ayudha Pooja"
+  },
+  {
+   "date": "2027-10-28",
+   "name": "Deepavali"
+  },
+  {
+   "date": "2027-12-25",
+   "name": "Christmas"
+  }
+ ]
+}

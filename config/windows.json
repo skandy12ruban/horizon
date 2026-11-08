@@ -1,0 +1,232 @@
+{
+  "_comment": "The World's Windows: long recorded views with natural sound and real motion (curated 2026-10-26). 'start' = seconds to skip on a first visit.",
+  "moods": [
+    "Train windows",
+    "Rooms with a view",
+    "Still nature",
+    "On the water",
+    "Above the clouds"
+  ],
+  "windows": [
+    {
+      "youtube": "1RHOWVH4aHA",
+      "name": "Up to Zermatt",
+      "where": "Valais, Switzerland",
+      "mood": "Train windows",
+      "timezone": "Europe/Zurich",
+      "source": "Calm Walk",
+      "note": "Side window · 4K",
+      "start": 60
+    },
+    {
+      "youtube": "B3k4zxss5DA",
+      "name": "Through the Gotthard to Lugano",
+      "where": "Switzerland",
+      "mood": "Train windows",
+      "timezone": "Europe/Zurich",
+      "source": "Oliver Hinz",
+      "note": "Side window · 4K · no music",
+      "start": 60
+    },
+    {
+      "youtube": "kKF5wGR8Luc",
+      "name": "Riverside line",
+      "where": "Gifu, Japan",
+      "mood": "Train windows",
+      "timezone": "Asia/Tokyo",
+      "source": "Abao Ambience",
+      "note": "Driver's view · 8K · no music",
+      "start": 60
+    },
+    {
+      "youtube": "rbW4-x6vJmk",
+      "name": "Glacier Express in heavy snow",
+      "where": "St. Moritz to Chur, Switzerland",
+      "mood": "Train windows",
+      "timezone": "Europe/Zurich",
+      "source": "lorirocks777",
+      "note": "Driver's view · 4K",
+      "start": 60
+    },
+    {
+      "youtube": "EF5mmBqbbEw",
+      "name": "Morning light over Tokyo Bay",
+      "where": "Tokyo, Japan",
+      "mood": "Train windows",
+      "timezone": "Asia/Tokyo",
+      "source": "Abao Ambience",
+      "note": "Front window · 8K · no music",
+      "start": 60
+    },
+    {
+      "youtube": "eM_kbOd4W04",
+      "name": "A room in Manarola",
+      "where": "Cinque Terre, Italy",
+      "mood": "Rooms with a view",
+      "timezone": "Europe/Rome",
+      "source": "Framic window views",
+      "note": "Real footage framed by a window · 4K",
+      "start": 60
+    },
+    {
+      "youtube": "6thiNOknHkk",
+      "name": "Greek beach window",
+      "where": "Greece",
+      "mood": "Rooms with a view",
+      "timezone": "Europe/Athens",
+      "source": "Framic window views",
+      "note": "Real footage framed by a window · 4K",
+      "start": 60
+    },
+    {
+      "youtube": "6ShKTutKooc",
+      "name": "Island sunset",
+      "where": "Mediterranean",
+      "mood": "Rooms with a view",
+      "timezone": "Europe/Athens",
+      "source": "Framic window views",
+      "note": "Real footage framed by a window · 4K",
+      "start": 60
+    },
+    {
+      "youtube": "64aVT-PKibU",
+      "name": "Golden countryside",
+      "where": "Countryside",
+      "mood": "Rooms with a view",
+      "timezone": "Europe/Zurich",
+      "source": "Framic window views",
+      "note": "Real footage framed by a window · 4K",
+      "start": 60
+    },
+    {
+      "youtube": "SMAW3uW3VgU",
+      "name": "Rain over Manhattan",
+      "where": "New York, USA",
+      "mood": "Rooms with a view",
+      "timezone": "America/New_York",
+      "source": "Window Scenes",
+      "note": "Window view · 4K · rain",
+      "start": 60
+    },
+    {
+      "youtube": "GovZkJbxe7g",
+      "name": "Sunrise on the Merced",
+      "where": "Yosemite, USA",
+      "mood": "Still nature",
+      "timezone": "America/Los_Angeles",
+      "source": "Naturescapes",
+      "note": "Fixed camera · 4K",
+      "start": 60
+    },
+    {
+      "youtube": "Se5NjX-cM5I",
+      "name": "Moraine Lake",
+      "where": "Banff, Canada",
+      "mood": "Still nature",
+      "timezone": "America/Edmonton",
+      "source": "Naturescapes",
+      "note": "Fixed camera · 4K",
+      "start": 60
+    },
+    {
+      "youtube": "qRTVg8HHzUo",
+      "name": "Lakeshore below Mount Shuksan",
+      "where": "Washington, USA",
+      "mood": "Still nature",
+      "timezone": "America/Los_Angeles",
+      "source": "Nature Soundscapes",
+      "note": "Fixed camera · birdsong",
+      "start": 60
+    },
+    {
+      "youtube": "s8R79mD0ZUI",
+      "name": "Autumn forest",
+      "where": "Forest",
+      "mood": "Still nature",
+      "timezone": "Europe/Berlin",
+      "source": "Quiet Place Ambient",
+      "note": "Fixed camera · 4K · real footage",
+      "start": 60
+    },
+    {
+      "youtube": "T108Hvq_0uM",
+      "name": "Beach at sunset",
+      "where": "Coast",
+      "mood": "Still nature",
+      "timezone": "Asia/Tokyo",
+      "source": "Sounds of Nature",
+      "note": "Fixed camera · 4K · no music",
+      "start": 60
+    },
+    {
+      "youtube": "hFd_jOr5X9E",
+      "name": "Hurtigruten up the coast",
+      "where": "Norway",
+      "mood": "On the water",
+      "timezone": "Europe/Oslo",
+      "source": "Slow TV (NRK Hurtigruten)",
+      "note": "From the bow · slow TV",
+      "start": 1500
+    },
+    {
+      "youtube": "ubz5lz_l7IY",
+      "name": "Winter in the Geirangerfjord",
+      "where": "Norway",
+      "mood": "On the water",
+      "timezone": "Europe/Oslo",
+      "source": "Nomadic Ambience",
+      "note": "From the deck · 4K",
+      "start": 60
+    },
+    {
+      "youtube": "FABZhqaFq6k",
+      "name": "Milford Sound",
+      "where": "Fiordland, New Zealand",
+      "mood": "On the water",
+      "timezone": "Pacific/Auckland",
+      "source": "Loctus",
+      "note": "Scenic cruise · 4K",
+      "start": 60
+    },
+    {
+      "youtube": "NAVj5h0A070",
+      "name": "Henningsvær harbour at sunrise",
+      "where": "Lofoten, Norway",
+      "mood": "On the water",
+      "timezone": "Europe/Oslo",
+      "source": "Nomadic Ambience",
+      "note": "Fixed camera · 4K",
+      "start": 60
+    },
+    {
+      "youtube": "2CSxJGqVnns",
+      "name": "Above the clouds",
+      "where": "Window seat",
+      "mood": "Above the clouds",
+      "timezone": "UTC",
+      "source": "Relaxation Time",
+      "note": "Airplane window · 4K",
+      "start": 60
+    },
+    {
+      "youtube": "bMEOD4-qcbs",
+      "name": "New York to Reykjavík",
+      "where": "Icelandair 767",
+      "mood": "Above the clouds",
+      "timezone": "Atlantic/Reykjavik",
+      "source": "Skylite Productions",
+      "note": "Full flight · 4K",
+      "start": 3600
+    },
+    {
+      "youtube": "RKOWCGVdsbM",
+      "name": "New York to Frankfurt",
+      "where": "Lufthansa 747-8",
+      "mood": "Above the clouds",
+      "timezone": "Europe/Berlin",
+      "source": "Skylite Productions",
+      "note": "Full flight · 4K",
+      "start": 3600
+    }
+  ]
+}

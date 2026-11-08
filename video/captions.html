@@ -1,0 +1,27 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap">
+<style>
+  html, body { margin: 0; width: 1920px; height: 1080px; background: transparent; font-family: "Bricolage Grotesque", sans-serif; color: #fff; }
+  .cap { position: absolute; left: 50%; top: 44px; transform: translateX(-50%); white-space: nowrap;
+    padding: 18px 34px 20px; border-radius: 999px; font-size: 40px; font-variation-settings: "wght" 560, "wdth" 92;
+    background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,0)), rgba(8,12,26,.62);
+    border: 1.5px solid rgba(255,255,255,.22); box-shadow: 0 12px 40px rgba(0,0,0,.35); }
+  .card { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center; padding: 0 160px; }
+  .kicker { font-size: 34px; font-variation-settings: "wght" 500, "wdth" 95; opacity: .82; margin-bottom: 18px; }
+  .title { font-size: 128px; line-height: .95; font-variation-settings: "wght" 300, "wdth" 75; letter-spacing: -.01em; }
+  .sub { font-size: 40px; font-variation-settings: "wght" 450, "wdth" 95; opacity: .88; margin-top: 30px; max-width: 1600px; line-height: 1.3; }
+  .list { margin-top: 44px; display: grid; grid-template-columns: repeat(2, auto); gap: 16px 70px; justify-content: start;
+    font-size: 34px; font-variation-settings: "wght" 500, "wdth" 95; }
+  .list span::before { content: ""; display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: #F2B48C; margin: 0 16px 6px 0; }
+  .foot { margin-top: 56px; font-size: 30px; font-variation-settings: "wght" 450, "wdth" 95; opacity: .72; }
+</style></head>
+<body><div id="root"></div>
+<script>
+  window.render = (kind, a, b, c) => {
+    const r = document.getElementById('root');
+    if (kind === 'cap') r.innerHTML = `<div class="cap">${a}</div>`;
+    if (kind === 'title') r.innerHTML = `<div class="card">${a ? `<div class="kicker">${a}</div>` : ''}<div class="title">${b}</div><div class="sub">${c}</div></div>`;
+    if (kind === 'end') r.innerHTML = `<div class="card"><div class="title">${a}</div><div class="list">${b.map(x => `<span>${x}</span>`).join('')}</div><div class="foot">${c}</div></div>`;
+  };
+</script></body></html>

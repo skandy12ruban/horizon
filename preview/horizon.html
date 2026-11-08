@@ -1,0 +1,589 @@
+<title>Horizon Launcher</title>
+<meta charset="utf-8">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wdth,wght@12..96,75..100,200..800&display=swap">
+<style>
+/* Layout: one 16:9 TV screen (1em = 1 TV dp at 960×540), controls for place, date and time underneath.
+   Edges: clock, cards, name and the bottom row all share the 64dp left line; the bottom row ends on the 64dp right line. */
+:root {
+  --room: #0A0D16;
+  --bezel: #020306;
+  --ink: #FFFFFF;
+  --soft: rgba(255,255,255,.85);
+  --quiet: rgba(255,255,255,.58);
+  --line: rgba(255,255,255,.14);
+  --pill-text: #0C1020;
+  --accent: #F2B48C;
+  --face: "Bricolage Grotesque", "Avenir Next Condensed", "Arial Narrow", system-ui, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body {
+  background: var(--room); color: var(--soft); font-family: var(--face);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 28px 40px;
+}
+.page { max-width: 1180px; margin: 0 auto; display: grid; gap: 22px; }
+.wrap { container-type: inline-size; }
+.tv {
+  position: relative; aspect-ratio: 16 / 9; max-width: 100%;
+  font-size: calc(100cqw / 960); /* 1em = 1dp */
+  border-radius: 10px; overflow: hidden; background: var(--bezel);
+  box-shadow: 0 0 0 6px var(--bezel), 0 30px 80px rgba(0,0,0,.55);
+  outline: none;
+}
+canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+.sky { position: absolute; left: 60em; top: 26em; }
+.time { display: flex; align-items: flex-end; }
+.clock {
+  font-size: 118em; line-height: .86; color: var(--ink);
+  font-variation-settings: "wght" 240, "wdth" 75; letter-spacing: -.015em;
+  text-shadow: 0 .02em .18em rgba(0,0,0,.2); font-variant-numeric: tabular-nums;
+}
+.mer { font-size: 30em; color: var(--soft); font-variation-settings: "wght" 400, "wdth" 75; padding: 0 0 .62em .33em; text-shadow: 0 1px .5em rgba(0,0,0,.2); }
+.tv .wx { display: flex; align-items: center; gap: 0; padding: 7em 18em 7em 14em; border-radius: 20em;
+  border: 1em solid rgba(255,255,255,.24);
+  background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,0)), linear-gradient(135deg, rgba(255,255,255,.24), rgba(255,255,255,.11)); }
+.wx svg { width: 22em !important; height: 22em !important; }
+.wx .wt { font-size: 21em !important; margin: 0 .48em 0 .38em !important; font-variation-settings: "wght" 350, "wdth" 75 !important; }
+.wx b { font-size: 14em; font-weight: normal; color: var(--ink); font-variation-settings: "wght" 550, "wdth" 95; }
+.wx i { font-size: 13em; font-style: normal; color: var(--soft); font-variation-settings: "wght" 450, "wdth" 95; margin-left: .77em; }
+.wx svg { width: 30em; height: 30em; fill: none; stroke: var(--ink); stroke-width: 1.8; stroke-linecap: round; }
+.wt { font-size: 34em; color: var(--ink); font-variation-settings: "wght" 300, "wdth" 75; line-height: 1; margin-right: .1em; }
+.wl { display: grid; gap: 3em; }
+.wl b { font-size: 15em; font-weight: normal; color: var(--ink); font-variation-settings: "wght" 550, "wdth" 95; }
+.ev { margin: 12em 0 0 4em; }
+.ev b { font-size: 17em; }
+.wl i { font-size: 13em; font-style: normal; color: var(--soft); font-variation-settings: "wght" 450, "wdth" 95; }
+.date { font-size: 21em; color: var(--soft); font-variation-settings: "wght" 500, "wdth" 100; padding: 0 0 0 .19em; margin-top: -.3em; text-shadow: 0 1px .6em rgba(0,0,0,.25); }
+
+/* ground: left edge 50dp so the row's 14dp focus padding puts cards on the 64dp line; right edge 52dp so button text ends on 64dp */
+.ground { position: absolute; left: 50em; right: 52em; bottom: 40em; display: flex; flex-direction: column; }
+.rowclip { overflow: visible; }
+.row { display: flex; gap: 18em; padding: 14em 14em 8em; margin-top: auto; } /* centred between the hills and the bar */
+.card {
+  position: relative; flex: none; width: 144em; height: 81em; border-radius: 12em; overflow: hidden;
+  display: grid; place-items: center; transition: transform .2s ease, box-shadow .2s ease;
+}
+.card::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: inset 0 0 0 1em var(--line); transition: box-shadow .2s; }
+.card.f { transform: scale(1.09); box-shadow: 0 14em 30em rgba(0,0,0,.5); z-index: 2; }
+.card.f::after { box-shadow: inset 0 0 0 3em var(--ink); }
+.card .mark { font-size: 21em; color: var(--ink); font-variation-settings: "wght" 700, "wdth" 85; letter-spacing: -.01em; }
+.card .mark small { display: block; font-size: .55em; font-variation-settings: "wght" 500, "wdth" 100; opacity: .8; letter-spacing: 0; text-align: center; }
+.all { background: rgba(255,255,255,.18); }
+.dots { display: grid; grid-template-columns: repeat(3, 5.2em); gap: 5.8em; }
+.dots i { width: 5.2em; height: 5.2em; border-radius: 50%; background: rgba(255,255,255,.9); }
+.namewrap { display: none; } /* banners speak for themselves */
+.name { display: inline-block; font-size: 22em; color: var(--ink); font-variation-settings: "wght" 600, "wdth" 88; padding-top: .1em; white-space: nowrap; transition: transform .25s ease; }
+.strip { display: flex; align-items: center; margin-top: auto; padding-left: 2em; }
+.strip .gap { flex: 1; }
+.btn { font-size: 15em; color: var(--soft); font-variation-settings: "wght" 500, "wdth" 95; padding: .47em .8em .53em; border-radius: 1.2em; white-space: nowrap; }
+.btn.f { background: var(--ink); color: var(--pill-text); }
+
+.controls { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 16px 28px; align-items: end; }
+.field { display: grid; gap: 8px; min-width: 0; }
+.field label { display: flex; justify-content: space-between; gap: 12px; font-size: 15px; color: var(--soft); font-variation-settings: "wght" 500; }
+.field output { color: var(--ink); font-variant-numeric: tabular-nums; font-variation-settings: "wght" 650; }
+input[type=range] { width: 100%; accent-color: var(--accent); }
+.side { display: flex; flex-wrap: wrap; gap: 12px; align-items: end; }
+select, input[type=date] {
+  font: inherit; font-size: 14px; color: var(--ink); background: transparent; border: 1px solid var(--line);
+  border-radius: 8px; padding: 7px 10px; min-width: 0;
+}
+select option { background: var(--room); }
+.presets { display: flex; flex-wrap: wrap; gap: 8px; }
+.presets button {
+  font: inherit; font-size: 14px; color: var(--soft); background: transparent; border: 1px solid var(--line);
+  border-radius: 999px; padding: 7px 14px; cursor: pointer;
+}
+.presets button[aria-pressed=true] { background: var(--ink); color: var(--pill-text); border-color: var(--ink); }
+.presets button:focus-visible, input:focus-visible, select:focus-visible, .tv:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+.readout { font-size: 14px; color: var(--soft); margin: 0; font-variant-numeric: tabular-nums; }
+.hint { font-size: 14px; color: var(--quiet); line-height: 1.5; max-width: 72ch; margin: 0; }
+kbd { font: inherit; border: 1px solid var(--line); border-radius: 4px; padding: 0 5px; color: var(--soft); }
+@media (max-width: 720px) { .controls { grid-template-columns: 1fr; } }
+@media (prefers-reduced-motion: reduce) { .card, .name { transition: none; } }
+</style>
+
+<div class="page">
+  <div class="wrap">
+    <div class="tv" id="tv" tabindex="0" aria-label="Horizon home screen preview. Use arrow keys to move focus.">
+      <canvas id="c"></canvas>
+      <div class="sky">
+        <div class="time"><div class="clock" id="clock">9:41</div><div class="mer" id="mer">pm</div></div>
+        <div class="date" id="date">Sunday, 8 November</div>
+
+        <div class="wl ev" id="ev" hidden><b id="ev1"></b><i id="ev2"></i></div>
+      </div>
+      <div class="ground" id="ground">
+        <div class="row" id="row"></div>
+        <div class="namewrap"><span class="name" id="name">YouTube</span></div>
+        <div class="strip" id="strip"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <div class="field">
+      <label for="t">Time of day <output id="tOut">--:--</output></label>
+      <input type="range" id="t" min="0" max="1439" step="1">
+    </div>
+    <div class="presets" role="group" aria-label="Jump to a time">
+      <button type="button" id="p-live" data-m="live" aria-pressed="true">Now</button>
+      <button type="button" id="p-rise" data-m="rise">Sunrise</button>
+      <button type="button" id="p-noon" data-m="720">Midday</button>
+      <button type="button" id="p-set" data-m="set">Sunset</button>
+      <button type="button" id="p-night" data-m="1380">11 pm</button>
+    </div>
+    <p class="readout" id="readout">&nbsp;</p>
+    <div class="side">
+      <div class="field"><label for="city">Where the TV is</label>
+        <select id="city"></select></div>
+      <div class="field"><label for="day">Date</label>
+        <input type="date" id="day"></div>
+      <div class="field"><label for="wsel">Weather</label>
+        <select id="wsel">
+          <option value="0">Clear</option><option value="2" selected>Partly cloudy</option><option value="3">Overcast</option>
+          <option value="63">Rain</option><option value="95">Thunderstorm</option><option value="45">Fog</option>
+        </select></div>
+    </div>
+    <p class="hint">Click the screen, then use the arrow keys (&larr; &rarr; &uarr; &darr;) like a TV remote. On the TV, Horizon finds its own location (Chennai, from its internet connection). Here you can pick any city. The sun and moon are where they really are over it, looking south with east on the left. The moon shows its real phase and tilt. Change the date to watch it wax and wane. Pick a weather to see it in the sky. App tiles and the weather are placeholders here; on the TV they show each app's own banner and live weather for the TV's location, and the apps reorder by how much you use them.</p>
+  </div>
+</div>
+
+<script>
+(() => {
+  const APPS = [
+    { label: "YouTube", accent: "#FF3B3B", bg: ["#2a0a0c", "#8f1418"] },
+    { label: "Prime Video", accent: "#1FA8E0", bg: ["#071a2b", "#0f5d8a"] },
+    { label: "JioHotstar", accent: "#5B5BFF", bg: ["#0c0c2e", "#3434b8"] },
+    { label: "Netflix", accent: "#E50914", bg: ["#140405", "#5a070b"] },
+    { label: "YouTube Music", accent: "#FF4E6A", bg: ["#22070d", "#8a1830"] },
+    { label: "Apple TV", accent: "#C8C8D0", bg: ["#111114", "#3a3a42"] },
+  ];
+  const LEFT = ["HDMI 1", "HDMI 2", "Wi-Fi", "Bluetooth", "Settings"], RIGHT = ["Radio", "Windows"];
+  const CITIES = [
+    ["Chennai", 13.08, 80.27, 5.5], ["Nagpur", 21.15, 79.09, 5.5], ["Bengaluru", 12.97, 77.59, 5.5],
+    ["Hyderabad", 17.39, 78.49, 5.5], ["Mumbai", 19.08, 72.88, 5.5], ["Delhi", 28.61, 77.21, 5.5],
+    ["Kolkata", 22.57, 88.36, 5.5], ["Kochi", 9.93, 76.27, 5.5], ["Colombo", 6.93, 79.85, 5.5],
+    ["Jaffna", 9.66, 80.01, 5.5], ["Singapore", 1.35, 103.82, 8], ["Dubai", 25.20, 55.27, 4],
+    ["London", 51.51, -0.13, 0], ["Toronto", 43.65, -79.38, -5], ["Sydney", -33.87, 151.21, 11],
+  ];
+  const GROUND = 0.50, NEAR = GROUND + 0.04;
+
+  // ---- weather in the sky (same rules as Sky.java) ----
+  const WS = { code: 2, cloud: 0, rain: 0, fog: false, storm: false, grey: 0, puffs: [], drops: [], flashAt: 0, nextFlash: 0, last: 0 };
+  const WX = { 0: ["Clear", 31, 33, 25], 2: ["Partly cloudy", 30, 30, 24], 3: ["Overcast", 28, 29, 24], 63: ["Rain", 26, 28, 23], 95: ["Thunderstorm", 25, 28, 23], 45: ["Fog", 24, 29, 22] };
+  const ICONS = {
+    sun: '<circle cx="12" cy="12" r="5"/><path d="M12 2.5v2.5M12 19v2.5M2.5 12H5M19 12h2.5M5.3 5.3l1.8 1.8M16.9 16.9l1.8 1.8M5.3 18.7l1.8-1.8M16.9 7.1l1.8-1.8"/>',
+    partly: '<circle cx="9" cy="9" r="4.2"/><path d="M9 2.4v1.6M9 14v1.6M2.4 9H4M14 9h1.6M4.3 4.3l1.1 1.1M12.6 12.6l1.1 1.1M4.3 13.7l1.1-1.1M12.6 5.4l1.1-1.1"/><path d="M7 19c-4 0-4-6 .5-6 1-4.5 8.5-4.5 9-.5 4.5 0 5 6.5.5 6.5z"/>',
+    cloud: '<path d="M7 18c-4 0-4-6 .5-6 1-4.5 8.5-4.5 9-.5 4.5 0 5 6.5.5 6.5z"/>',
+    rain: '<path d="M7 15c-4 0-4-6 .5-6 1-4.5 8.5-4.5 9-.5 4.5 0 5 6.5.5 6.5z"/><path d="M8 18l-1 3.5M12 18l-1 3.5M16 18l-1 3.5"/>',
+    storm: '<path d="M7 15c-4 0-4-6 .5-6 1-4.5 8.5-4.5 9-.5 4.5 0 5 6.5.5 6.5z"/><path d="M13 17l-3 4h3l-2 3.5"/>',
+    fog: '<path d="M4 9h14M6 13h14M4 17h14"/>',
+  };
+  function setWeather(code) {
+    WS.code = code;
+    WS.cloud = code <= 0 ? 0 : code === 1 ? 0.15 : code === 2 ? 0.45 : code === 3 ? 0.85 : (code === 45 || code === 48) ? 0.5 : code >= 95 ? 0.95 : 0.8;
+    WS.rain = code === 63 ? 0.75 : code >= 95 ? 1 : 0;
+    WS.fog = code === 45; WS.storm = code >= 95;
+    WS.grey = Math.max(0, WS.cloud - 0.4) / 0.6;
+    const [t, temp, hi, lo] = WX[code] || WX[2];
+    document.getElementById("wxText").textContent = t;
+    document.getElementById("wxTemp").textContent = temp + "°";
+    document.getElementById("wxRange").textContent = `${lo}–${hi}°`;
+    document.getElementById("wxIcon").innerHTML = ICONS[code === 0 ? "sun" : code === 2 ? "partly" : code === 3 ? "cloud" : code === 63 ? "rain" : code >= 95 ? "storm" : "fog"];
+    layoutWeather(); kick();
+  }
+  function puff(w, h, seed) {
+    const c = document.createElement("canvas"); c.width = w; c.height = h;
+    const x = c.getContext("2d"), r = rand(seed);
+    let g = x.createRadialGradient(w / 2, h * 0.7, 0, w / 2, h * 0.7, w * 0.42);
+    g.addColorStop(0, "rgba(255,255,255,.44)"); g.addColorStop(1, "rgba(255,255,255,0)");
+    x.save(); x.translate(w / 2, h * 0.7); x.scale(1, 0.35); x.translate(-w / 2, -h * 0.7); x.fillStyle = g; x.beginPath(); x.arc(w / 2, h * 0.7, w * 0.42, 0, 7); x.fill(); x.restore();
+    for (let i = 0; i < 9; i++) {
+      const t = i / 8, bulge = Math.sin(Math.PI * (0.15 + 0.7 * t)), rad = h * (0.30 + 0.24 * bulge) * (0.9 + r() * 0.2);
+      const cx = w * (0.22 + 0.56 * t) + (r() - 0.5) * w * 0.04, cy = h * 0.66 - rad * 0.45 * bulge;
+      g = x.createRadialGradient(cx, cy, 0, cx, cy, rad); g.addColorStop(0, "rgba(255,255,255,.61)"); g.addColorStop(1, "rgba(255,255,255,0)");
+      x.fillStyle = g; x.beginPath(); x.arc(cx, cy, rad, 0, 7); x.fill();
+    }
+    return c;
+  }
+  let puffShapes = [], tintCanvas = null;
+  function layoutWeather() {
+    const g = H * GROUND, r = rand(5);
+    if (WS.cloud > 0 && puffShapes.length === 0 && W_ > 0) puffShapes = [0, 1, 2].map(k => puff(Math.round(W_ * 0.26), Math.round(H * 0.11), 20 + k));
+    const n = WS.cloud <= 0 ? 0 : Math.round(2 + WS.cloud * 10);
+    WS.puffs = Array.from({ length: n }, () => ({ x: r() * W_ * 1.3 - W_ * 0.3, y: g * (0.04 + r() * 0.5), s: 0.6 + r() * 0.8 }));
+    const d = 0, u = W_ / 960; // no rain streaks: rainy days get the grey sky and clouds
+    WS.drops = Array.from({ length: d }, () => ({ x: r() * W_, y: r() * H, v: (500 + r() * 300) * u, l: (10 + r() * 10) * u }));
+  }
+  let W_ = 0;
+
+  const KEY_ALT = [-18, -12, -4, 4, 15, 40];
+  const MORNING = [["#060A18", "#0C1430", "#14234A"], ["#121842", "#262C62", "#3C4A7E"], ["#2E3266", "#8E6488", "#F0B08A"],
+                   ["#4A6FB0", "#A9B4CC", "#F7D9AE"], ["#3A78C6", "#6FA6DD", "#A8D2F0"], ["#2F6CC0", "#5E9CDB", "#A2CDF0"]].map(r => r.map(hex));
+  const EVENING = [["#060A18", "#0C1430", "#14234A"], ["#0E1232", "#2A2558", "#4A3A6A"], ["#221C44", "#8A4470", "#F2905E"],
+                   ["#3A4F8E", "#B0708A", "#F2A070"], ["#3A78C6", "#6FA6DD", "#A8D2F0"], ["#2F6CC0", "#5E9CDB", "#A2CDF0"]].map(r => r.map(hex));
+  const MARIA = [[-0.30, -0.36, 0.27], [0.12, -0.30, 0.15], [0.27, -0.05, 0.18], [0.62, -0.22, 0.10],
+                 [-0.55, 0.02, 0.33], [-0.16, 0.40, 0.15], [0.50, 0.17, 0.12], [-0.02, 0.10, 0.10]];
+
+  function hex(h) { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+  const mix = (a, b, f) => a.map((v, i) => v + (b[i] - v) * f);
+  const rgba = (c, a = 1) => `rgba(${c[0] | 0},${c[1] | 0},${c[2] | 0},${a})`;
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const BLACK = [5, 6, 12];
+
+  // ---- astronomy: port of SunCalc (Vladimir Agafonkin, BSD-2), same as Astro.java ----
+  const RAD = Math.PI / 180, E = RAD * 23.4397, DAY = 86400000, J1970 = 2440588, J2000 = 2451545;
+  const days = ms => ms / DAY - 0.5 + J1970 - J2000;
+  const ra = (l, b) => Math.atan2(Math.sin(l) * Math.cos(E) - Math.tan(b) * Math.sin(E), Math.cos(l));
+  const dec = (l, b) => Math.asin(Math.sin(b) * Math.cos(E) + Math.cos(b) * Math.sin(E) * Math.sin(l));
+  const azimuth = (H, phi, d) => Math.atan2(Math.sin(H), Math.cos(H) * Math.sin(phi) - Math.tan(d) * Math.cos(phi));
+  const altitude = (H, phi, d) => Math.asin(Math.sin(phi) * Math.sin(d) + Math.cos(phi) * Math.cos(d) * Math.cos(H));
+  const sidereal = (d, lw) => RAD * (280.16 + 360.9856235 * d) - lw;
+  const refraction = h => { if (h < 0) h = 0; return 0.0002967 / Math.tan(h + 0.00312536 / (h + 0.08901179)); };
+  function sunCoords(d) {
+    const M = RAD * (357.5291 + 0.98560028 * d);
+    const L = M + RAD * (1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M) + 0.0003 * Math.sin(3 * M)) + RAD * 102.9372 + Math.PI;
+    return { dec: dec(L, 0), ra: ra(L, 0) };
+  }
+  function moonCoords(d) {
+    const L = RAD * (218.316 + 13.176396 * d), M = RAD * (134.963 + 13.064993 * d), F = RAD * (93.272 + 13.229350 * d);
+    const l = L + RAD * 6.289 * Math.sin(M), b = RAD * 5.128 * Math.sin(F);
+    return { ra: ra(l, b), dec: dec(l, b), dist: 385001 - 20905 * Math.cos(M) };
+  }
+  function sunPos(ms, lat, lng) {
+    const lw = RAD * -lng, phi = RAD * lat, d = days(ms), c = sunCoords(d), H = sidereal(d, lw) - c.ra;
+    return { az: azimuth(H, phi, c.dec), alt: altitude(H, phi, c.dec) };
+  }
+  function moonPos(ms, lat, lng) {
+    const lw = RAD * -lng, phi = RAD * lat, d = days(ms), c = moonCoords(d), H = sidereal(d, lw) - c.ra;
+    const h = altitude(H, phi, c.dec);
+    return { az: azimuth(H, phi, c.dec), alt: h + refraction(h),
+             pa: Math.atan2(Math.sin(H), Math.tan(phi) * Math.cos(c.dec) - Math.sin(c.dec) * Math.cos(H)) };
+  }
+  function moonLight(ms) {
+    const d = days(ms), s = sunCoords(d), m = moonCoords(d), sdist = 149598000;
+    const phi = Math.acos(Math.sin(s.dec) * Math.sin(m.dec) + Math.cos(s.dec) * Math.cos(m.dec) * Math.cos(s.ra - m.ra));
+    const inc = Math.atan2(sdist * Math.sin(phi), m.dist - sdist * Math.cos(phi));
+    const angle = Math.atan2(Math.cos(s.dec) * Math.sin(s.ra - m.ra), Math.sin(s.dec) * Math.cos(m.dec) - Math.cos(s.dec) * Math.sin(m.dec) * Math.cos(s.ra - m.ra));
+    return { fraction: (1 + Math.cos(inc)) / 2, phase: 0.5 + 0.5 * inc * (angle < 0 ? -1 : 1) / Math.PI, angle };
+  }
+  function phaseName(p, f) {
+    if (f < 0.02) return "New moon";
+    if (f > 0.98) return "Full moon";
+    const waxing = p < 0.5;
+    if (Math.abs(f - 0.5) < 0.04) return waxing ? "First quarter" : "Last quarter";
+    return (waxing ? "Waxing " : "Waning ") + (f < 0.5 ? "crescent" : "gibbous");
+  }
+
+  const FESTIVALS = [["2026-11-08","Deepavali"],["2026-11-24","Karthigai Deepam"],["2026-12-25","Christmas"],["2027-01-01","New Year's Day"],
+    ["2027-01-14","Bhogi"],["2027-01-15","Pongal"],["2027-01-16","Mattu Pongal"],["2027-01-17","Kaanum Pongal"],["2027-01-22","Thaipoosam"],
+    ["2027-01-26","Republic Day"],["2027-03-10","Ramzan",1],["2027-04-14","Tamil New Year"],["2027-05-17","Bakrid",1],["2027-08-15","Independence Day"],
+    ["2027-09-04","Vinayagar Chathurthi"],["2027-10-02","Gandhi Jayanti"],["2027-10-08","Ayudha Pooja"],["2027-10-28","Deepavali"],["2027-12-25","Christmas"]];
+  const SHOWERS = [[1,3,"Quadrantids"],[4,22,"Lyrids"],[5,6,"Eta Aquariids"],[7,30,"Delta Aquariids"],[8,12,"Perseids"],[10,8,"Draconids"],[10,21,"Orionids"],[11,17,"Leonids"],[12,14,"Geminids"]];
+  function sunLongitude(ms) { const d = days(ms), M = RAD * (357.5291 + 0.98560028 * d); let l = (M + RAD * (1.9148 * Math.sin(M) + 0.02 * Math.sin(2 * M) + 0.0003 * Math.sin(3 * M)) + RAD * 102.9372 + Math.PI) % (2 * Math.PI); return l < 0 ? l + 2 * Math.PI : l; }
+  function events(ms) { // ms = shown instant; "today" is the city's local date
+    const out = [], off = city[3] * 3600000, local = new Date(ms + off);
+    const y = local.getUTCFullYear(), mo = local.getUTCMonth(), d = local.getUTCDate(), mid = Date.UTC(y, mo, d) - off;
+    for (let k = 0; k <= 3 && out.length === 0; k++) {
+      const dd = new Date(Date.UTC(y, mo, d + k)), key = dd.toISOString().slice(0, 10), f = FESTIVALS.find(x => x[0] === key);
+      if (f) out.push(`${f[1]}${f[2] ? " expected" : ""} ${k === 0 ? "today" : k === 1 ? "tomorrow" : "on " + dd.toLocaleDateString("en-GB", { weekday: "long", timeZone: "UTC" })}`);
+    }
+    const a = mid + 12 * 3600000, b = a + 86400000, p0 = moonLight(a).phase, p1 = moonLight(b).phase;
+    let sky = null;
+    if (p0 < 0.5 && p1 >= 0.5) {
+      let rise = null, prev = moonPos(a + 3 * 3600000, city[1], city[2]).alt;
+      for (let t = a + 3 * 3600000 + 300000; t < a + 18 * 3600000; t += 300000) { const al = moonPos(t, city[1], city[2]).alt; if (prev < 0 && al >= 0) { const r = new Date(t + off); rise = `${r.getUTCHours() % 12 || 12}:${String(r.getUTCMinutes()).padStart(2, "0")} ${r.getUTCHours() < 12 ? "am" : "pm"}`; break; } prev = al; }
+      sky = "Full moon tonight" + (rise ? ", rising " + rise : "");
+    } else {
+      const l0 = sunLongitude(mid), l1 = sunLongitude(mid + 86400000);
+      for (let q = 0; q < 4 && !sky; q++) { const t = q * Math.PI / 2; if (q === 0 ? l1 < l0 : l0 < t && l1 >= t) sky = q % 2 === 0 ? `${q ? "September" : "March"} equinox: day and night are nearly equal` : `${q === 1 ? "June" : "December"} solstice: the ${(q === 1) === (city[1] >= 0) ? "longest" : "shortest"} day of the year`; }
+      const sh = SHOWERS.find(x => x[0] === mo + 1 && x[1] === d);
+      if (!sky && sh) sky = `${sh[2]} meteor shower peaks tonight${moonLight(a + 43200000).fraction > 0.6 ? ", though the moon is bright" : ", look up after midnight"}`;
+      if (!sky && p1 < p0) sky = "New moon tonight: the darkest skies for stars";
+    }
+    if (sky) out.push(sky);
+    return out;
+  }
+
+  // ---- build the screen ----
+  const row = document.getElementById("row"), strip = document.getElementById("strip");
+  const items = [[], []];
+  APPS.forEach(a => {
+    const d = document.createElement("div");
+    d.className = "card";
+    d.style.background = `linear-gradient(135deg, ${a.bg[0]}, ${a.bg[1]})`;
+    const words = a.label.split(" ");
+    d.innerHTML = `<div class="mark">${words[0]}${words[1] ? `<small>${words.slice(1).join(" ")}</small>` : ""}</div>`;
+    d.dataset.label = a.label; d.dataset.accent = a.accent;
+    row.appendChild(d); items[0].push(d);
+  });
+  const all = document.createElement("div");
+  all.className = "card all"; all.dataset.label = "All apps"; all.dataset.accent = "#F2E6C8";
+  all.innerHTML = `<div class="dots">${"<i></i>".repeat(9)}</div>`;
+  row.appendChild(all); items[0].push(all);
+  const addBtn = t => { const b = document.createElement("div"); b.className = "btn"; b.textContent = t; strip.appendChild(b); items[1].push(b); };
+  LEFT.forEach(addBtn);
+  const gap = document.createElement("div"); gap.className = "gap"; strip.appendChild(gap);
+  const wx = document.createElement("div"); wx.className = "wx";
+  wx.innerHTML = '<svg id="wxIcon" viewBox="0 0 24 24" aria-hidden="true"></svg><span class="wt" id="wxTemp">30°</span><b id="wxText">Partly cloudy</b><i id="wxRange">24–30°</i>';
+  strip.appendChild(wx);
+  const gap2 = document.createElement("div"); gap2.className = "gap"; strip.appendChild(gap2);
+  RIGHT.forEach(addBtn);
+
+  // ---- focus, like a D-pad ----
+  const tv = document.getElementById("tv"), nameEl = document.getElementById("name"), ground = document.getElementById("ground");
+  let fr = 0, fc = 0, glowX = -1, glowTarget = -1, glowCol = [255, 255, 255], glowShown = [255, 255, 255];
+  function focus(r, c) {
+    items[fr][fc].classList.remove("f");
+    fr = r; fc = clamp(c, 0, items[r].length - 1);
+    const el = items[fr][fc];
+    el.classList.add("f");
+    if (fr === 0) {
+      nameEl.textContent = el.dataset.label;
+      // name sits under its card: offset from the first card, in layout px (unscaled by the focus lift)
+      nameEl.style.transform = `translateX(${el.offsetLeft - items[0][0].offsetLeft}px)`;
+      const tvBox = tv.getBoundingClientRect(), b = el.getBoundingClientRect();
+      glowCol = hex(el.dataset.accent);
+      glowTarget = (b.left + b.width / 2 - tvBox.left) / tvBox.width;
+      if (glowX < 0) glowX = glowTarget;
+      kick();
+    }
+  }
+  items[0].forEach((el, i) => el.addEventListener("click", () => { tv.focus(); focus(0, i); }));
+  items[1].forEach((el, i) => el.addEventListener("click", () => { tv.focus(); focus(1, i); }));
+  const nearest = (list, x) => { let best = 0, bd = 1e9; list.forEach((b, i) => { const d = Math.abs(b.getBoundingClientRect().left - x); if (d < bd) { bd = d; best = i; } }); return best; };
+  tv.addEventListener("keydown", e => {
+    const k = e.key;
+    if (k === "ArrowRight") focus(fr, fc + 1);
+    else if (k === "ArrowLeft") focus(fr, fc - 1);
+    else if (k === "ArrowDown" && fr === 0) focus(1, nearest(items[1], items[0][fc].getBoundingClientRect().left));
+    else if (k === "ArrowUp" && fr === 1) focus(0, nearest(items[0], items[1][fc].getBoundingClientRect().left));
+    else return;
+    e.preventDefault();
+  });
+
+  // ---- place, date and time ----
+  const citySel = document.getElementById("city"), dayIn = document.getElementById("day");
+  CITIES.forEach(([n], i) => { const o = document.createElement("option"); o.value = i; o.textContent = n; citySel.appendChild(o); });
+  let city = CITIES[0];
+  try { const s = localStorage.getItem("horizon-city"); if (s && CITIES[+s]) { city = CITIES[+s]; citySel.value = s; } } catch (e) {}
+  citySel.addEventListener("change", () => { city = CITIES[+citySel.value]; try { localStorage.setItem("horizon-city", citySel.value); } catch (e) {} kick(); });
+
+  const slider = document.getElementById("t"), tOut = document.getElementById("tOut"), readout = document.getElementById("readout");
+  let override = null, dayOverride = null; // minutes in city-local time; date as y/m/d
+  const presets = [...document.querySelectorAll(".presets button")];
+  const setPressed = btn => presets.forEach(b => b.setAttribute("aria-pressed", String(b === btn)));
+
+  // the city's local wall clock (fixed UTC offset; fine for a preview)
+  const cityNow = () => { const n = Date.now(); return new Date(n + city[3] * 3600000); }; // read with getUTC*
+  function shownMs() {
+    const now = cityNow();
+    const y = dayOverride ? dayOverride[0] : now.getUTCFullYear(), mo = dayOverride ? dayOverride[1] : now.getUTCMonth(), d = dayOverride ? dayOverride[2] : now.getUTCDate();
+    const m = override ?? (now.getUTCHours() * 60 + now.getUTCMinutes() + now.getUTCSeconds() / 60);
+    return Date.UTC(y, mo, d, 0, 0, 0) + m * 60000 - city[3] * 3600000;
+  }
+  // find today's sunrise/sunset minute by scanning altitude (−0.833° = upper limb with refraction)
+  function sunEvent(rising) {
+    const base = shownMs() - minuteOfShown() * 60000;
+    let prev = null;
+    for (let m = 0; m <= 1440; m += 2) {
+      const a = sunPos(base + m * 60000, city[1], city[2]).alt / RAD + 0.833;
+      if (prev !== null && (rising ? prev < 0 && a >= 0 : prev > 0 && a <= 0)) return m;
+      prev = a;
+    }
+    return rising ? 360 : 1080;
+  }
+  const minuteOfShown = () => { const d = new Date(shownMs() + city[3] * 3600000); return d.getUTCHours() * 60 + d.getUTCMinutes() + d.getUTCSeconds() / 60; };
+
+  presets.forEach(b => b.addEventListener("click", () => {
+    const v = b.dataset.m;
+    override = v === "live" ? null : v === "rise" ? sunEvent(true) + 10 : v === "set" ? sunEvent(false) + 8 : +v;
+    if (v === "live") { dayOverride = null; setDayInput(); }
+    setPressed(b); kick();
+  }));
+  slider.addEventListener("input", () => { override = +slider.value; setPressed(null); kick(); });
+  function setDayInput() { const n = cityNow(); dayIn.value = `${n.getUTCFullYear()}-${String(n.getUTCMonth() + 1).padStart(2, "0")}-${String(n.getUTCDate()).padStart(2, "0")}`; }
+  dayIn.addEventListener("change", () => {
+    const p = dayIn.value.split("-").map(Number);
+    if (p.length === 3 && p.every(n => !isNaN(n))) { dayOverride = [p[0], p[1] - 1, p[2]]; if (override === null) override = minuteOfShown(); setPressed(null); kick(); }
+  });
+  setDayInput();
+
+  // ---- sky, same as Sky.java ----
+  const cv = document.getElementById("c"), ctx = cv.getContext("2d");
+  let W = 0, H = 0, stars = [], edges = {};
+  function rand(seed) { return () => (seed = (seed * 16807) % 2147483647) / 2147483647; }
+  function ridge(x, amp, f, ph) { const u = x / W * Math.PI * 2; return amp * (0.6 * Math.sin(u * f + ph) + 0.3 * Math.sin(u * f * 2.3 + ph * 1.7) + 0.1 * Math.sin(u * f * 5.1 + ph * 0.3)); }
+  function edge(base, amp, f, ph) { const pts = [], step = Math.max(4, W / 160); for (let x = 0; x <= W + step; x += step) pts.push([x, base - ridge(x, amp, f, ph)]); return pts; }
+  function resize() {
+    const dpr = Math.min(2, window.devicePixelRatio || 1), r = tv.getBoundingClientRect();
+    W = W_ = r.width * dpr; H = r.height * dpr; cv.width = W; cv.height = H; puffShapes = [];
+    const g = H * GROUND;
+    edges = { far: edge(g - H * 0.06, H * 0.035, 2.1, 0.7), mid: edge(g - H * 0.015, H * 0.03, 3.3, 2.4), near: edge(H * NEAR, H * 0.022, 1.6, 4.1) };
+    const rnd = rand(11); stars = [];
+    for (let i = 0; i < 140; i++) stars.push([rnd() * W, Math.pow(rnd(), 1.4) * g * 0.92, (rnd() < 0.12 ? 1.6 : 0.9) * W / 960, rnd() * 6.28]);
+    ground.style.top = (NEAR * 540 + 8) + "em";
+    layoutWeather();
+    focus(fr, fc);
+  }
+  const nightness = altDeg => clamp((-2 - altDeg) / 10, 0, 1);
+  function sample(alt, morning) {
+    const keys = morning ? MORNING : EVENING;
+    if (alt <= KEY_ALT[0]) return keys[0];
+    if (alt >= KEY_ALT[KEY_ALT.length - 1]) return keys[keys.length - 1];
+    let i = 0; while (alt >= KEY_ALT[i + 1]) i++;
+    let f = (alt - KEY_ALT[i]) / (KEY_ALT[i + 1] - KEY_ALT[i]); f = f * f * (3 - 2 * f);
+    return [0, 1, 2].map(j => mix(keys[i][j], keys[i + 1][j], f));
+  }
+  function path(pts, close) { ctx.beginPath(); pts.forEach(([x, y], i) => i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)); if (close) { ctx.lineTo(W, H); ctx.lineTo(0, H); ctx.closePath(); } }
+  const skyX = az => W * (0.5 + 0.44 * Math.sin(az) * (city[1] >= 0 ? 1 : -1));
+  const skyY = (alt, g) => g - Math.sin(Math.max(alt, -0.2)) * g * 0.86;
+
+  function drawMoon(x, y, pos, l, night, g, top, middle, u) {
+    const r = 24 * u, vis = (0.45 + 0.55 * night) * (1 - 0.75 * WS.cloud), under = mix(top, middle, clamp(y / g, 0, 1));
+    if (night > 0.2) {
+      const gr = ctx.createRadialGradient(x, y, 0, x, y, r * 5);
+      gr.addColorStop(0, `rgba(221,228,255,${0.25 * l.fraction * night})`); gr.addColorStop(1, "rgba(221,228,255,0)");
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(x, y, r * 5, 0, 7); ctx.fill();
+    }
+    ctx.fillStyle = rgba(mix(under, [128, 144, 176], 0.25), night);
+    ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+
+    const z = l.angle - pos.pa, rot = Math.atan2(-Math.cos(z), -Math.sin(z)), k = 2 * l.fraction - 1, ex = r * Math.abs(k);
+    ctx.save(); ctx.translate(x, y); ctx.rotate(rot);
+    const lit = new Path2D();
+    lit.arc(0, 0, r, -Math.PI / 2, Math.PI / 2, false);
+    if (k >= 0) lit.ellipse(0, 0, ex, r, 0, Math.PI / 2, 3 * Math.PI / 2, false);
+    else lit.ellipse(0, 0, ex, r, 0, Math.PI / 2, -Math.PI / 2, true);
+    lit.closePath();
+    ctx.fillStyle = `rgba(244,241,230,${vis})`; ctx.fill(lit);
+    ctx.save(); ctx.clip(lit);
+    ctx.rotate(-pos.pa - rot + (city[1] < 0 ? Math.PI : 0));
+    for (const [mx, my, mr] of MARIA) { // soft-edged seas, like the real moon's grey patches
+      const sg = ctx.createRadialGradient(mx * r, my * r, 0, mx * r, my * r, mr * r);
+      sg.addColorStop(0, `rgba(150,150,158,${0.34 * vis})`); sg.addColorStop(0.6, `rgba(150,150,158,${0.22 * vis})`); sg.addColorStop(1, "rgba(150,150,158,0)");
+      ctx.fillStyle = sg; ctx.beginPath(); ctx.arc(mx * r, my * r, mr * r, 0, 7); ctx.fill();
+    }
+    ctx.restore(); ctx.restore();
+  }
+
+  let timer = null;
+  function kick() { clearTimeout(timer); timer = null; requestAnimationFrame(draw); }
+  function draw() {
+    const ms = shownMs(), g = H * GROUND, u = W / 960;
+    const sun = sunPos(ms, city[1], city[2]), sunAlt = sun.alt / RAD;
+    let [top, middle, horizon] = sample(sunAlt, sun.az < 0); const night = nightness(sunAlt);
+    if (WS.grey > 0) { const grey = mix(hex("#8A94A3"), hex("#161A22"), night), k = WS.grey * 0.6; top = mix(top, grey, k); middle = mix(middle, grey, k); horizon = mix(horizon, grey, k * 0.8); }
+    const nowT = performance.now(), dt = Math.min(0.25, WS.last ? (nowT - WS.last) / 1000 : 0); WS.last = nowT;
+    const ev = events(ms), evEl = document.getElementById("ev");
+    evEl.hidden = ev.length === 0; document.getElementById("ev1").textContent = ev[0] || ""; document.getElementById("ev2").textContent = ev[1] || "";
+
+    const local = new Date(ms + city[3] * 3600000), hh = local.getUTCHours(), mm = local.getUTCMinutes();
+    document.getElementById("clock").textContent = `${hh % 12 || 12}:${String(mm).padStart(2, "0")}`;
+    document.getElementById("mer").textContent = hh < 12 ? "am" : "pm";
+    document.getElementById("date").textContent = local.toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" }).replace(/^(\w+)/, "$1,");
+    tOut.textContent = `${String(hh).padStart(2, "0")}:${String(mm).padStart(2, "0")}`;
+    if (override === null) slider.value = hh * 60 + mm;
+
+    let gr = ctx.createLinearGradient(0, 0, 0, g + H * 0.05);
+    gr.addColorStop(0, rgba(top)); gr.addColorStop(0.62, rgba(middle)); gr.addColorStop(1, rgba(horizon));
+    ctx.fillStyle = gr; ctx.fillRect(0, 0, W, H);
+
+    if (night > 0.02) {
+      const s = performance.now() / 1000;
+      for (const [x, y, r, ph] of stars) {
+        const tw = 0.65 + 0.35 * Math.sin(s * 0.5 + ph);
+        ctx.fillStyle = `rgba(255,250,240,${0.9 * night * (1 - WS.cloud) * tw * (1 - y / g * 0.6)})`;
+        ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill();
+      }
+    }
+
+    if (sunAlt > -1 && WS.cloud < 0.98) {
+      const veil = Math.max(0, (WS.cloud - 0.5) / 0.5); ctx.globalAlpha = 1 - 0.7 * veil;
+      const x = skyX(sun.az), y = skyY(sun.alt, g), r = 30 * u, low = clamp(1 - sunAlt / 25, 0, 1);
+      const halo = mix(hex("#FFE6B0"), horizon, low * 0.6);
+      gr = ctx.createRadialGradient(x, y, 0, x, y, r * 6);
+      gr.addColorStop(0, rgba(halo, 0.44)); gr.addColorStop(1, rgba(halo, 0));
+      ctx.fillStyle = gr; ctx.beginPath(); ctx.arc(x, y, r * 6, 0, 7); ctx.fill();
+      ctx.fillStyle = rgba(mix(hex("#FFF6DE"), hex("#FFA860"), low)); ctx.beginPath(); ctx.arc(x, y, r, 0, 7); ctx.fill(); ctx.globalAlpha = 1;
+    }
+    const moon = moonPos(ms, city[1], city[2]), light = moonLight(ms);
+    if (moon.alt > -0.01 && light.fraction > 0.04) drawMoon(skyX(moon.az), skyY(moon.alt, g), moon, light, night, g, top, middle, u);
+    const compass = a => ["S", "SW", "W", "NW", "N", "NE", "E", "SE"][((Math.round((a / RAD) / 45) % 8) + 8) % 8];
+    readout.textContent = `${phaseName(light.phase, light.fraction)}, ${Math.round(light.fraction * 100)}% lit. ` +
+      (moon.alt > 0 ? `Moon ${Math.round(moon.alt / RAD)}° up in the ${compass(moon.az)}.` : `Moon below the horizon.`) +
+      ` Sun ${Math.round(sunAlt)}°.`;
+
+    if (WS.puffs.length) {
+      let tint = mix(mix([255, 255, 255], horizon, 0.25), mix(top, hex("#8C96AA"), 0.35), night);
+      if (WS.grey > 0) tint = mix(tint, mix(hex("#B4BCC8"), hex("#2A303C"), night), WS.grey * 0.6);
+      ctx.globalAlpha = (0.55 + 0.4 * WS.cloud) * (1 - 0.35 * night);
+      for (let i = 0; i < WS.puffs.length; i++) {
+        const p = WS.puffs[i], b = puffShapes[i % puffShapes.length]; if (!b) continue;
+        p.x += dt * 6 * u * (0.6 + p.s * 0.5); if (p.x > W_) p.x = -b.width * p.s;
+        if (!tintCanvas) tintCanvas = document.createElement("canvas");
+        tintCanvas.width = b.width; tintCanvas.height = b.height; const tc = tintCanvas.getContext("2d");
+        tc.drawImage(b, 0, 0); tc.globalCompositeOperation = "source-in"; tc.fillStyle = rgba(tint); tc.fillRect(0, 0, b.width, b.height);
+        ctx.drawImage(tintCanvas, p.x, p.y, b.width * p.s, b.height * p.s * (0.8 + 0.2 * WS.cloud));
+      }
+      ctx.globalAlpha = 1;
+    }
+    if (WS.storm) {
+      if (nowT > WS.nextFlash) { WS.flashAt = nowT; WS.nextFlash = nowT + 7000 + Math.random() * 14000; }
+      const since = nowT - WS.flashAt;
+      if (since < 450) { ctx.fillStyle = `rgba(230,235,255,${0.35 * (1 - since / 450) * (since < 80 || since > 160 ? 1 : 0.3)})`; ctx.fillRect(0, 0, W_, g + H * 0.05); }
+    }
+    gr = ctx.createLinearGradient(0, g - H * 0.14, 0, g + H * 0.02);
+    gr.addColorStop(0, rgba(horizon, 0)); gr.addColorStop(1, rgba(horizon, 0.6));
+    ctx.fillStyle = gr; ctx.fillRect(0, g - H * 0.14, W, H * 0.16);
+
+    const dark = 0.45 + 0.35 * night;
+    ctx.fillStyle = rgba(mix(mix(horizon, middle, 0.5), BLACK, dark * 0.55)); path(edges.far, true); ctx.fill();
+    ctx.fillStyle = rgba(mix(mix(middle, top, 0.4), BLACK, dark * 0.8)); path(edges.mid, true); ctx.fill();
+    gr = ctx.createLinearGradient(0, g, 0, H);
+    gr.addColorStop(0, rgba(mix(top, [4, 5, 10], 0.82))); gr.addColorStop(1, "rgb(2,3,6)");
+    ctx.fillStyle = gr; path(edges.near, true); ctx.fill();
+    if (WS.fog) {
+      const fc = mix(hex("#DCE2EA"), hex("#3A4252"), night); gr = ctx.createLinearGradient(0, g - H * 0.2, 0, H * NEAR + H * 0.05);
+      gr.addColorStop(0, rgba(fc, 0)); gr.addColorStop(1, rgba(fc, 0.55)); ctx.fillStyle = gr; ctx.fillRect(0, g - H * 0.2, W_, H * (NEAR - GROUND) + H * 0.25);
+    }
+    if (WS.drops.length) {
+      ctx.strokeStyle = rgba(mix(hex("#D8E2F0"), top, 0.2), 0.38); ctx.lineWidth = 1.2 * u; ctx.lineCap = "round"; ctx.beginPath();
+      for (const dr of WS.drops) {
+        dr.y += dr.v * dt; dr.x -= dr.v * dt * 0.12; if (dr.y > H) { dr.y = -dr.l; dr.x = Math.random() * W_; } if (dr.x < 0) dr.x += W_;
+        ctx.moveTo(dr.x, dr.y); ctx.lineTo(dr.x - dr.l * 0.12, dr.y + dr.l);
+      }
+      ctx.stroke();
+    }
+
+    let moving = false;
+    if (glowTarget >= 0) {
+      glowX += (glowTarget - glowX) * 0.18; glowShown = mix(glowShown, glowCol, 0.18);
+      moving = Math.abs(glowTarget - glowX) * W > 1;
+      const gx = glowX * W, spread = W * 0.16;
+      ctx.lineCap = "round";
+      gr = ctx.createRadialGradient(gx, H * NEAR, 0, gx, H * NEAR, spread);
+      gr.addColorStop(0, rgba(glowShown, 0.4)); gr.addColorStop(1, rgba(glowShown, 0));
+      ctx.strokeStyle = gr; ctx.lineWidth = 34 * u; path(edges.near); ctx.stroke();
+      gr = ctx.createLinearGradient(gx - spread, 0, gx + spread, 0);
+      gr.addColorStop(0, rgba(glowShown, 0)); gr.addColorStop(0.5, rgba(glowShown, 0.94)); gr.addColorStop(1, rgba(glowShown, 0));
+      ctx.strokeStyle = gr; ctx.lineWidth = 3 * u; path(edges.near); ctx.stroke();
+    }
+
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (moving && !reduce) requestAnimationFrame(draw);
+    else if (!reduce && (WS.drops.length || WS.puffs.length || WS.storm)) requestAnimationFrame(draw);
+    else { if (moving) glowX = glowTarget; timer = setTimeout(() => requestAnimationFrame(draw), night > 0.02 && !reduce ? 120 : 4000); }
+  }
+
+  new ResizeObserver(() => { resize(); kick(); }).observe(tv);
+  document.getElementById("wsel").addEventListener("change", e => setWeather(+e.target.value));
+  (document.fonts ? document.fonts.ready : Promise.resolve()).then(() => { resize(); focus(0, 0); setWeather(2); });
+})();
+</script>

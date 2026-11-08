@@ -1,0 +1,7 @@
+1|Meet Horizon. My new TV launcher, made in hours using Claude Code.
+2|It runs on my TCL Google TV. No root, and it switches back to Google TV in one tap.
+3|The sky follows the real sun and moon over my city, and festival days show up right on the screen.
+4|Live weather plays out in the clouds.
+5|Tamil, Telugu and Hindi radio, built in.
+6|Every app, one press away. No ads.
+7|Horizon. Built with Claude Code.

@@ -1,0 +1,8 @@
+{
+  "_comment": "Optional features. littleOffice needs the Mac service in little-office/. debugWebViews lets Claude inspect the Retro TV / Windows pages over adb (chrome://inspect); leave false normally.",
+  "littleOffice": false,
+  "radio": true,
+  "retroTv": false,
+  "worldsWindows": true,
+  "debugWebViews": false
+}
