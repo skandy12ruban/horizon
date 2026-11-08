@@ -36,13 +36,42 @@ Made in hours with [Claude Code](https://claude.com/claude-code).
 
 - An **Android TV / Google TV** on Android 8 or newer, on the same Wi-Fi as your computer. Built and
   tested on a TCL Smart TV Pro (Google TV, Android 11).
-- A **Mac** (Linux works too) with Homebrew.
+- A development machine with **Java 17** and **Android SDK tools**.
+
+### macOS (with Homebrew)
 
 ```bash
 brew install --cask android-platform-tools android-commandlinetools
 brew install openjdk@17
 export JAVA_HOME=/opt/homebrew/opt/openjdk@17
 yes | sdkmanager --sdk_root="$HOME/Library/Android/sdk" "platform-tools" "build-tools;34.0.0" "platforms;android-34"
+```
+
+### Linux (Ubuntu/Debian)
+
+```bash
+sudo apt-get update
+sudo apt-get install -y openjdk-17-jdk android-platform-tools
+# Download Android Command Line Tools from https://developer.android.com/studio#command-tools
+unzip commandlinetools-linux-*.zip -d ~/android-sdk
+mkdir -p ~/android-sdk/cmdline-tools/latest
+mv ~/android-sdk/cmdline-tools/* ~/android-sdk/cmdline-tools/latest
+export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+export PATH="$HOME/android-sdk/cmdline-tools/latest/bin:$PATH"
+yes | sdkmanager --sdk_root="$HOME/android-sdk" "platform-tools" "build-tools;34.0.0" "platforms;android-34"
+```
+
+### Windows (PowerShell)
+
+```powershell
+# Install Java 17 from https://adoptium.net/ or use Chocolatey
+choco install adoptopenjdk17
+
+# Download Android Command Line Tools from https://developer.android.com/studio#command-tools
+# Extract to C:\Android\cmdline-tools\latest
+$env:JAVA_HOME = "C:\Program Files\Eclipse Adoptium\jdk-17.*"
+$env:Path += ";C:\Android\cmdline-tools\latest\bin"
+yes | sdkmanager --sdk_root="C:\Android" "platform-tools" "build-tools;34.0.0" "platforms;android-34"
 ```
 
 No Gradle and no Android Studio: the launcher builds with plain `javac`, `d8` and `aapt2`.
